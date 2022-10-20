@@ -1,0 +1,135 @@
+@import '../../styles/colors.scss';
+
+* {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+
+  padding: 0;
+  margin:0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $background;
+}
+
+input[type="password"],
+input[type="email"] {
+  line-height: 40px;
+  padding: 0 40px 0 8px;
+  border: 1px solid $primary-light;
+  border-radius: 4px;
+
+  &:focus {
+    outline-color: $primary-light;
+  }
+}
+
+button {
+  font-size: 16px;
+  background-color: $primary;
+  color: $white;
+  line-height: 60px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top: 40px solid $primary-dark;
+    background-color: $primary;
+
+    img {
+      margin-top: 40px;
+    }
+
+    h1 {
+      color: $white;
+      margin: 16px 0px 40px;
+    }
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    background-color: $white;
+    width: 400px;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0px 1px 3px -1px $black;
+
+    h2 {
+      font-size: 24px;
+      color: $primary-dark;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .inputWrap {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin-top: 16px;
+
+      input {
+        flex-grow: 1;
+      }
+
+      .status {
+        font-size: 12px;
+        position: absolute;
+        right: 8px;
+        cursor: help;
+      }
+    }
+
+    .submit {
+      margin-top: 32px;
+    }
+
+    .link {
+      margin-top: 16px;
+      text-align: center;
+      color: $primary;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .loadingWrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .spinner {
+        margin-top: 32px;
+      }
+
+      .error {
+        margin-top: 32px;
+        color: $primary-light;
+      }
+    }
+  }
+
+  .footer {
+    background-color: $primary;
+    height: 48px;
+  }
+}
