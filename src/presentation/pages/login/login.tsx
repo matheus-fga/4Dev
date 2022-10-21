@@ -7,13 +7,13 @@ import Context from '@/presentation/contexts/form/formContext'
 
 type StateProps = {
   isLoading: boolean
-  ErrorMessage: string
+  errorMessage: string
 }
 
 const Login: React.FC = () => {
   const [state] = useState<StateProps>({
     isLoading: false,
-    ErrorMessage: ''
+    errorMessage: ''
   })
 
   return (
@@ -26,7 +26,7 @@ const Login: React.FC = () => {
           <Input type="password" name="password" placeholder="Digite sua senha" />
           <button className={Styles.submit} type="submit">Entrar</button>
           <span className={Styles.link}>Criar conta</span>
-          <FormStatus message='Error' />
+          <FormStatus />
         </form>
       </Context.Provider>
       <Footer />
