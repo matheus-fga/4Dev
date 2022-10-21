@@ -1,7 +1,7 @@
 import React from 'react'
 import Styles from './formStatus-styles.scss'
 
-import Spinner from '@/presentation/components/spinner/spinner'
+import { Spinner } from '@/presentation/components'
 
 type FormStatusProps = {
   message: string
