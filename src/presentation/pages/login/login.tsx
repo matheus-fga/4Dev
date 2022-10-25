@@ -25,17 +25,21 @@ const Login: React.FC<LoginProps> = ({ validation }: LoginProps) => {
   })
 
   useEffect(() => {
-    setErrorState((prevState) => ({
-      ...prevState,
-      email: validation.validate('email', state.email)
-    }))
+    if (validation) {
+      setErrorState((prevState) => ({
+        ...prevState,
+        email: validation.validate('email', state.email)
+      }))
+    }
   }, [state.email])
 
   useEffect(() => {
-    setErrorState((prevState) => ({
-      ...prevState,
-      password: validation.validate('password', state.password)
-    }))
+    if (validation) {
+      setErrorState((prevState) => ({
+        ...prevState,
+        password: validation.validate('password', state.password)
+      }))
+    }
   }, [state.password])
 
   return (
@@ -46,7 +50,7 @@ const Login: React.FC<LoginProps> = ({ validation }: LoginProps) => {
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
-          <button data-testid="submit" className={Styles.submit} type="submit" disabled>Entrar</button>
+          <button data-testid="submit" className={Styles.submit} type="submit" disabled={!!errorState.email || !!errorState.password}>Entrar</button>
           <span className={Styles.link}>Criar conta</span>
           <FormStatus />
         </form>
