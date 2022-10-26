@@ -114,6 +114,12 @@ describe('Login component', () => {
     simulateFieldStatus(sut, 'email', 'Tudo certo!', '✔️')
   })
 
+  test('should show valid password state if Validation succeeds', () => {
+    const { sut } = makeSut()
+    fillPasswordField(sut)
+    simulateFieldStatus(sut, 'password', 'Tudo certo!', '✔️')
+  })
+
   test('should enable submit button if form is valid', () => {
     const { sut } = makeSut()
     fillLoginForm(sut)
