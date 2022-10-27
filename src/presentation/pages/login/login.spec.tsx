@@ -1,6 +1,7 @@
 import React from 'react'
 import { cleanup, fireEvent, render, RenderResult, waitForElementToBeRemoved } from '@testing-library/react'
 import faker from 'faker'
+import 'jest-localstorage-mock'
 
 import Login from './login'
 import { InvalidCredentialsError } from '@/domain/errors'
@@ -67,6 +68,9 @@ const simulateFieldStatus = (
 
 describe('Login component', () => {
   afterEach(cleanup)
+  beforeEach(() => {
+    localStorage.clear()
+  })
 
   test('should start with initial state', () => {
     const validationError = faker.random.words()
@@ -128,14 +132,15 @@ describe('Login component', () => {
     expect(submitButton.disabled).toBe(false)
   })
 
-  test('should show spinner on submit button click', () => {
+  test('should show spinner on submit button click', async () => {
     const { sut } = makeSut()
     simulateValidSubmit(sut)
     const spinner = sut.getByTestId('spinner')
     expect(spinner).toBeTruthy()
+    await waitForElementToBeRemoved(spinner)
   })
 
-  test('should call Authentication with correct values', () => {
+  test('should call Authentication with correct values', async () => {
     const { sut, authenticationSpy } = makeSut()
     const email = faker.internet.email()
     const password = faker.internet.password()
@@ -144,14 +149,18 @@ describe('Login component', () => {
       email,
       password
     })
+    const spinner = sut.getByTestId('spinner')
+    await waitForElementToBeRemoved(spinner)
   })
 
-  test('should call Authentication only once', () => {
+  test('should call Authentication only once', async () => {
     const { sut, authenticationSpy } = makeSut()
     simulateValidSubmit(sut)
     const submitButton = sut.getByTestId('submit')
     fireEvent.click(submitButton)
     expect(authenticationSpy.callsCount).toBe(1)
+    const spinner = sut.getByTestId('spinner')
+    await waitForElementToBeRemoved(spinner)
   })
 
   test('should not call Authentication if form is invalid', () => {
@@ -164,6 +173,7 @@ describe('Login component', () => {
   })
 
   test('should present error if Authentication fails', async () => {
+    jest.useFakeTimers()
     const { sut, authenticationSpy } = makeSut()
     const error = new InvalidCredentialsError()
     jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
@@ -172,5 +182,16 @@ describe('Login component', () => {
     await waitForElementToBeRemoved(spinner)
     const mainError = sut.getByTestId('main-error')
     expect(mainError.textContent).toBe(error.message)
+  })
+
+  test('should add accessToken to localstorage on success', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    simulateValidSubmit(sut)
+    const spinner = sut.getByTestId('spinner')
+    await waitForElementToBeRemoved(spinner)
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      'accessToken',
+      authenticationSpy.account.accessToken
+    )
   })
 })
