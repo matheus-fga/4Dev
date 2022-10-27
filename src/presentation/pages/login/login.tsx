@@ -55,16 +55,18 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
     }))
 
     try {
-      await authentication.auth({
+      const account = await authentication.auth({
         email: state.email,
         password: state.password
       })
+
+      localStorage.setItem('accessToken', account.accessToken)
     } catch (error) {
       setErrorState((prevState) => ({
         ...prevState,
         main: error.message
       }))
-
+    } finally {
       setState((prevState) => ({
         ...prevState,
         isLoading: false
@@ -80,7 +82,14 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
-          <button data-testid="submit" className={Styles.submit} type="submit" disabled={!!errorState.email || !!errorState.password}>Entrar</button>
+          <button
+            data-testid="submit"
+            className={Styles.submit}
+            type="submit"
+            disabled={!!state.isLoading || !!errorState.email || !!errorState.password}
+          >
+            Entrar
+          </button>
           <span className={Styles.link}>Criar conta</span>
           <FormStatus />
         </form>
