@@ -54,10 +54,22 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
       isLoading: true
     }))
 
-    await authentication.auth({
-      email: state.email,
-      password: state.password
-    })
+    try {
+      await authentication.auth({
+        email: state.email,
+        password: state.password
+      })
+    } catch (error) {
+      setErrorState((prevState) => ({
+        ...prevState,
+        main: error.message
+      }))
+
+      setState((prevState) => ({
+        ...prevState,
+        isLoading: false
+      }))
+    }
   }
 
   return (

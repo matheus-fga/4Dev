@@ -11,7 +11,7 @@ const FormStatus: React.FC = () => {
   return (
     <div data-testid ="loading-wrap" className={Styles.loadingWrap}>
       { state.isLoading && <Spinner className={Styles.spinner} /> }
-      { errorState.main && <span className={Styles.message}>{errorState.main}</span> }
+      { errorState.main && <span data-testid ="main-error" className={Styles.message}>{errorState.main}</span> }
     </div>
   )
 }
