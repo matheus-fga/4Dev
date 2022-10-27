@@ -1,8 +1,9 @@
 import React from 'react'
-import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react'
+import { cleanup, fireEvent, render, RenderResult, waitForElementToBeRemoved } from '@testing-library/react'
 import faker from 'faker'
 
 import Login from './login'
+import { InvalidCredentialsError } from '@/domain/errors'
 
 import { ValidationSpy, AuthenticationSpy } from '@/presentation/test'
 
@@ -160,5 +161,16 @@ describe('Login component', () => {
     const form = sut.getByTestId('form')
     fireEvent.submit(form)
     expect(authenticationSpy.callsCount).toBe(0)
+  })
+
+  test('should present error if Authentication fails', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
+    simulateValidSubmit(sut)
+    const spinner = sut.getByTestId('spinner')
+    await waitForElementToBeRemoved(spinner)
+    const mainError = sut.getByTestId('main-error')
+    expect(mainError.textContent).toBe(error.message)
   })
 })
