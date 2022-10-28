@@ -16,7 +16,7 @@ type SutTypes = {
   authenticationSpy: AuthenticationSpy
 }
 
-const history = createMemoryHistory()
+const history = createMemoryHistory({ initialEntries: ['/login'] })
 
 const makeSut = (validationError?: string): SutTypes => {
   const authenticationSpy = new AuthenticationSpy()
@@ -192,7 +192,7 @@ describe('Login component', () => {
     expect(mainError.textContent).toBe(error.message)
   })
 
-  test('should add accessToken to localstorage on success', async () => {
+  test('should add accessToken to localstorage and navigates to home page on success', async () => {
     const { sut, authenticationSpy } = makeSut()
     simulateValidSubmit(sut)
     const spinner = sut.getByTestId('spinner')
@@ -201,6 +201,8 @@ describe('Login component', () => {
       'accessToken',
       authenticationSpy.account.accessToken
     )
+    expect(history.length).toBe(1)
+    expect(history.location.pathname).toBe('/')
   })
 
   test('should redirect to singUp page', () => {
