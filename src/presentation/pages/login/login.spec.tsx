@@ -1,7 +1,9 @@
 import React from 'react'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 import { cleanup, fireEvent, render, RenderResult, waitForElementToBeRemoved } from '@testing-library/react'
-import faker from 'faker'
 import 'jest-localstorage-mock'
+import faker from 'faker'
 
 import Login from './login'
 import { InvalidCredentialsError } from '@/domain/errors'
@@ -14,11 +16,17 @@ type SutTypes = {
   authenticationSpy: AuthenticationSpy
 }
 
+const history = createMemoryHistory()
+
 const makeSut = (validationError?: string): SutTypes => {
   const authenticationSpy = new AuthenticationSpy()
   const validationSpy = new ValidationSpy()
   validationSpy.errorMessage = validationError
-  const sut = render(<Login validation={validationSpy} authentication={authenticationSpy} />)
+  const sut = render(
+    <Router history={history}>
+      <Login validation={validationSpy} authentication={authenticationSpy} />
+    </Router>
+  )
   return {
     sut,
     validationSpy,
@@ -193,5 +201,13 @@ describe('Login component', () => {
       'accessToken',
       authenticationSpy.account.accessToken
     )
+  })
+
+  test('should redirect to singUp page', () => {
+    const { sut } = makeSut()
+    const register = sut.getByTestId('signup')
+    fireEvent.click(register)
+    expect(history.length).toBe(2)
+    expect(history.location.pathname).toBe('/signup')
   })
 })
