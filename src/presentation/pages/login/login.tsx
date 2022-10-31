@@ -62,13 +62,14 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
       })
 
       localStorage.setItem('accessToken', account.accessToken)
+
       history.replace('/')
     } catch (error) {
       setErrorState((prevState) => ({
         ...prevState,
         main: error.message
       }))
-    } finally {
+
       setState((prevState) => ({
         ...prevState,
         isLoading: false
